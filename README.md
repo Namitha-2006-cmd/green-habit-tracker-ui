@@ -7,6 +7,9 @@ A mobile app UI/UX design prototype focused on encouraging sustainable lifestyle
 ## 🎯 Objective
 To design an intuitive and engaging mobile experience that motivates users to build eco-friendly habits.
 
+## Demo Video - Green Habit Tracker
+https://drive.google.com/file/d/1uWYbyr-nf_O-63KQQ7trowR1jo1zP5M2/view?usp=sharing
+
 ## 🛠 Tools Used
 - Figma
 - UI/UX Design
