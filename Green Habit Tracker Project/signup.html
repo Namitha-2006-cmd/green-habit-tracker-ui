@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sign Up - Green Habit Tracker</title>
+<style>
+    body {
+        font-family: 'Comic Sans MS', cursive, sans-serif;
+        margin: 0;
+        padding: 0;
+        background-color: white;
+    }
+    .header {
+        background-color: #c8e6c9;
+        padding: 20px 0;
+        text-align: center;
+        width: 100%;
+    }
+    .header h1 {
+        font-size: 28px;
+        font-weight: bold;
+        color: #2e7d32;
+        margin: 0;
+    }
+    .header img {
+        vertical-align: middle;
+        margin-right: 8px;
+    }
+    .header p {
+        font-size: 16px;
+        margin-top: 4px;
+        color: #333;
+    }
+    .container {
+        max-width: 350px;
+        margin: 40px auto;
+        text-align: center;
+    }
+    .switch-buttons {
+        margin: 15px 0;
+    }
+    .switch-buttons button {
+        border: 1px solid #2e7d32;
+        background: white;
+        padding: 6px 18px;
+        border-radius: 15px;
+        margin: 0 5px;
+        cursor: pointer;
+        font-size: 14px;
+    }
+    .switch-buttons button.active {
+        background: #c8e6c9;
+    }
+    input {
+        width: 90%;
+        padding: 10px;
+        margin: 10px 0;
+        border-radius: 15px;
+        border: 1px solid #999;
+        outline: none;
+        font-size: 14px;
+    }
+    .main-button {
+        background: #c8e6c9;
+        border: none;
+        padding: 10px 25px;
+        border-radius: 15px;
+        cursor: pointer;
+        font-size: 14px;
+        margin-top: 10px;
+    }
+    .error {
+        color: red;
+        font-size: 13px;
+        margin-top: -5px;
+        margin-bottom: 10px;
+    }
+</style>
+</head>
+<body>
+
+    <div class="header">
+        <h1>
+            
+            Green Habit Tracker
+        </h1>
+        <p>Track Today, Save Tomorrow</p>
+    </div>
+
+    <div class="container">
+        <div class="switch-buttons">
+            <button class="active">Sign Up</button>
+            <button onclick="window.location.href='login.html'">Login</button>
+        </div>
+
+        <input type="text" id="username" placeholder="Username or Email">
+        <div id="userError" class="error"></div>
+
+        <input type="password" id="password" placeholder="Password" oninput="checkPasswordStrength()">
+        <div id="passError" class="error"></div>
+
+        <input type="password" id="confirmPassword" placeholder="Confirm Password" oninput="checkPasswordMatch()">
+        <div id="confirmError" class="error"></div>
+
+        <label><input type="checkbox" onclick="togglePassword()"> Show Password</label>
+        <br>
+
+        <button class="main-button" onclick="validateSignup()">Sign Up</button>
+    </div>
+
+<script>
+function togglePassword() {
+    let pwd = document.getElementById("password");
+    let cpwd = document.getElementById("confirmPassword");
+    let type = (pwd.type === "password") ? "text" : "password";
+    pwd.type = type;
+    cpwd.type = type;
+}
+
+function checkPasswordStrength() {
+    let password = document.getElementById("password").value;
+    let error = document.getElementById("passError");
+    let strongRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{10,}$/;
+
+    if (!strongRegex.test(password)) {
+        error.innerHTML = "Password must be at least 10 characters with 1 uppercase, 1 lowercase, 1 number, and 1 special character.";
+    } else {
+        error.innerHTML = "";
+    }
+}
+
+function checkPasswordMatch() {
+    let password = document.getElementById("password").value;
+    let confirmPassword = document.getElementById("confirmPassword").value;
+    let error = document.getElementById("confirmError");
+
+    if (password !== confirmPassword) {
+        error.innerHTML = "Passwords do not match.";
+    } else {
+        error.innerHTML = "";
+    }
+}
+
+function validateSignup() {
+    let username = document.getElementById("username").value.trim();
+    let password = document.getElementById("password").value.trim();
+    let confirmPassword = document.getElementById("confirmPassword").value.trim();
+
+    let valid = true;
+    document.getElementById("userError").innerHTML = "";
+
+    if (username === "") {
+        document.getElementById("userError").innerHTML = "Username or Email cannot be empty.";
+        valid = false;
+    }
+
+    let strongRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{10,}$/;
+    if (!strongRegex.test(password)) {
+        document.getElementById("passError").innerHTML = "Password must be at least 10 characters with 1 uppercase, 1 lowercase, 1 number, and 1 special character.";
+        valid = false;
+    }
+
+    if (password !== confirmPassword) {
+        document.getElementById("confirmError").innerHTML = "Passwords do not match.";
+        valid = false;
+    }
+
+    if (valid) {
+        window.location.href = 'login.html';
+    }
+}
+</script>
+
+</body>
+</html>

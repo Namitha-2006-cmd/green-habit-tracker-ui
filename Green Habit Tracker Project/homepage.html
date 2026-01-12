@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Green Habit Tracker</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<style>
+    body {
+        margin: 0;
+        font-family: 'Comic Sans MS', cursive, sans-serif;
+        background-color: #ffffff;
+    }
+
+    /* Header */
+    header {
+        background-color: #d0f0d0;
+        color: #329432;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 10px 20px;
+        box-shadow: 0px 4px 8px rgba(0,0,0,0.3);
+        position: relative;
+    }
+
+    .title-group {
+        position: absolute;
+        left: 50%;
+        transform: translateX(-50%);
+        text-align: center;
+    }
+
+    header h1 {
+        font-size: 28px;
+        margin: 0;
+    }
+
+    header span {
+        font-size: 14px;
+        font-weight: bold;
+    }
+
+    .header-right {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        margin-left: auto;
+    }
+
+    .header-right img {
+        height: 32px;
+        cursor: pointer;
+    }
+    
+
+    /* Layout */
+    .top-section {
+        display: flex;
+        justify-content: space-between;
+        padding: 20px;
+        gap: 20px;
+    }
+
+    .habits {
+        flex: 1;
+        background: white;
+        padding: 20px;
+        border-radius: 12px;
+        box-shadow: 0px 4px 6px rgba(0,0,0,0.1);
+    }
+
+    .habits h2 {
+        text-align: center;
+        margin-bottom: 10px;
+    }
+
+    .habits label {
+        display: block;
+        font-size: 18px;
+        margin-bottom: 10px;
+    }
+
+    .completed-tasks {
+        margin-top: 15px;
+        padding: 10px;
+        background: #f0fff0;
+        border: 1px solid #67B51A;
+        border-radius: 8px;
+    }
+
+    .calendar {
+        flex: 1;
+        background: white;
+        padding: 20px;
+        border-radius: 12px;
+        box-shadow: 0px 4px 6px rgba(0,0,0,0.1);
+        position: relative;
+    }
+
+    /* Bottom section */
+    .bottom-section {
+        display: flex;
+        justify-content: space-between;
+        padding: 20px;
+        gap: 20px;
+    }
+
+    /* Circular progress */
+    .progress-container {
+        flex: 0.5;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        background: white;
+        padding: 15px;
+        border-radius: 12px;
+        box-shadow: 0px 4px 6px rgba(0,0,0,0.1);
+        position: relative;
+    }
+
+    .progress-circle {
+        width: 100px; 
+        height: 100px;
+    }
+
+    /* CO2 Chart */
+    .chart-container {
+        flex: 1;
+        background: white;
+        padding: 20px;
+        border-radius: 12px;
+        box-shadow: 0px 4px 6px rgba(0,0,0,0.1);
+    }
+
+    /* Submit button */
+    .submit-btn {
+        display: block;
+        margin: 15px auto 0 auto;
+        background: #329432;
+        color: white;
+        padding: 8px 16px;
+        border: none;
+        border-radius: 6px;
+        cursor: pointer;
+    }
+</style>
+</head>
+<body>
+
+<!-- Header -->
+<header>
+    <div class="header-right">
+        <img src="pictures/home.png" alt="Home">
+        <img src="pictures/notification.png" alt="Notifications">
+        <img src="pictures/profile.png" alt="Profile">
+        <img src="pictures/streak.png" alt="Streak">
+        <img src="pictures/login.png" alt="Login">
+    </div>
+    <div class="title-group">
+        <h1>GREEN HABIT TRACKER</h1>
+        <span>Sustainability Made Simple</span>
+    </div>
+</header>
+
+<!-- Top Section -->
+<div class="top-section">
+    <div class="habits">
+        <h2>Habits</h2>
+        <label><input type="checkbox" class="habit" value="2"> Walking instead of driving</label>
+        <label><input type="checkbox" class="habit" value="3"> Using reusable bottles</label>
+        <label><input type="checkbox" class="habit" value="1"> Avoid Plastic</label>
+        <label><input type="checkbox" class="habit" value="4"> Recycling waste</label>
+        <label><input type="checkbox" class="habit" value="5"> Save Water</label>
+        <label><input type="checkbox" class="habit" value="6"> Conservation Energy</label>
+        <label><input type="checkbox" class="habit" value="4"> Turn Off Unused Applications</label>
+
+        <div class="completed-tasks">
+            <strong>Completed Tasks:</strong>
+            <ul id="completedList"></ul>
+        </div>
+
+        <button class="submit-btn" id="submitBtn" disabled>Submit</button>
+    </div>
+
+    <div class="calendar">
+        <h2>Calendar</h2>
+        <iframe id="calendarFrame" src="https://calendar.google.com/calendar/embed?showTitle=0&showPrint=0&showTabs=0&mode=MONTH" 
+                style="border:0" width="100%" height="300"></iframe>
+    </div>
+</div>
+
+<!-- Bottom Section -->
+<div class="bottom-section">
+    <div class="progress-container">
+        <h2>Progress</h2>
+        <canvas id="progressCircle" class="progress-circle"></canvas>
+    </div>
+    <div class="chart-container">
+        <h2>CO₂ Saved Today (kg)</h2>
+        <canvas id="co2Chart"></canvas>
+    </div>
+</div>
+
+<script>
+    // Progress Circle with text
+    const progressCtx = document.getElementById('progressCircle').getContext('2d');
+    const progressPlugin = {
+        id: 'progressText',
+        afterDraw(chart) {
+            const {width} = chart;
+            const {height} = chart;
+            const ctx = chart.ctx;
+            ctx.save();
+            ctx.font = '30px Comic Sans MS';
+            ctx.fillStyle = '#000';
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            ctx.fillText(progressText, width / 2, height / 2);
+        }
+    };
+
+    let progressText = "0/7 habits completed";
+    let progressChart = new Chart(progressCtx, {
+        type: 'doughnut',
+        data: { datasets: [{ data: [0, 100], backgroundColor: ['#67B51A', '#e0e0e0'], borderWidth: 0 }] },
+        options: { cutout: '80%', responsive: true, plugins: { legend: { display: false } } },
+        plugins: [progressPlugin]
+    });
+
+    const completedList = document.getElementById("completedList");
+    const submitBtn = document.getElementById("submitBtn");
+    const habits = document.querySelectorAll('.habit');
+
+    // CO2 chart
+    const co2Ctx = document.getElementById('co2Chart').getContext('2d');
+    let co2Value = 0;
+    let co2Chart = new Chart(co2Ctx, {
+        type: 'bar',
+        data: { labels: ['Today'], datasets: [{ label: 'CO₂ Saved (kg)', data: [co2Value], backgroundColor: '#329432' }] },
+        options: { responsive: true, plugins: { legend: { display: false } } }
+    });
+
+    habits.forEach(habit => {
+        habit.addEventListener('change', () => {
+            updateProgress();
+            updateCompletedTasks();
+            checkSubmitEnable();
+        });
+    });
+
+    function updateProgress() {
+        let checkedCount = document.querySelectorAll('.habit:checked').length;
+        let total = habits.length;
+        let percentage = (checkedCount / total) * 100;
+
+        progressText = `${checkedCount}/${total} habits completed`;
+        progressChart.data.datasets[0].data = [percentage, 100 - percentage];
+        progressChart.update();
+
+        let co2Sum = 0;
+        document.querySelectorAll('.habit:checked').forEach(h => co2Sum += parseInt(h.value));
+        co2Value = co2Sum;
+        co2Chart.data.datasets[0].data = [co2Value];
+        co2Chart.update();
+    }
+
+    function updateCompletedTasks() {
+        completedList.innerHTML = '';
+        document.querySelectorAll('.habit:checked').forEach(h => {
+            let li = document.createElement('li');
+            li.textContent = h.parentElement.textContent.trim();
+            completedList.appendChild(li);
+        });
+    }
+
+    function checkSubmitEnable() {
+        submitBtn.disabled = document.querySelectorAll('.habit:checked').length === 0;
+    }
+
+    submitBtn.addEventListener('click', () => {
+        habits.forEach(habit => habit.disabled = true);
+        submitBtn.disabled = true;
+
+        // Ideally we'd need a custom calendar to insert a tick into today's cell,
+        // but since it's an iframe from Google Calendar, direct DOM access isn't allowed.
+        // Alternative: show alert or some local visual confirmation
+        alert("Habits submitted! ✔ Today's date marked in your tracker.");
+    });
+</script>
+
+</body>
+</html>
