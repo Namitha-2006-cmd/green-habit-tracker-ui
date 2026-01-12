@@ -13,9 +13,6 @@ To design an intuitive and engaging mobile experience that motivates users to bu
 - Interactive Prototyping
 - Design Systems
 
-## 🔗 Figma Prototype
-👉 [View Interactive Prototype] https://www.figma.com/proto/zudbCUtgqsP0lDmxywdYjN/Green-Habit-Tracker?node-id=3-5&p=f&t=YJ7sn3SPrd6WBCm7-1&scaling=scale-down&content-scaling=fixed&page-id=0%3A1&starting-point-node-id=3%3A5
-
 ## 🖼 Screenshots
 ![Home Screen](Green Habit Tracker Images/Home.png)
 ![Progress](Green Habit Tracker Images/Progress.png)
